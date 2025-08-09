@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Doctors & Patients - Health Care Hospital</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      background: url('img/back.jpg') no-repeat center center fixed;
+      background-size: cover;
+      position: relative;
+      min-height: 100vh;
+    }
+    /* Overlay for readability */
+    body::before {
+      content: "";
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0, 0, 0, 0.3); /* Dark overlay for better text contrast */
+      z-index: -1;
+    }
+    .doctor-card img {
+      height: 200px;
+      object-fit: cover;
+    }
+    .card img {
+      width: 100%;
+      height: 250px;
+      object-fit: contain;
+      background-color: #f8f9fa;
+      padding: 10px;
+    }
+    /* Logout button style */
+    .logout-btn {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 1000;
+    }
+  </style>
+</head>
+<body>
+
+<!-- Logout Button -->
+<a href="login.html" class="btn btn-danger logout-btn">Logout</a>
+
+<div class="container py-5">
+  <h2 class="mb-4 text-light">Our Doctors</h2>
+  <div class="row g-4" id="doctor-list">
+    <!-- Doctors will be inserted by JavaScript -->
+  </div>
+</div>
+
+<script>
+  const doctors = [
+    { name: "Dr. Aliza", specialty: "Cardiologist", image: "img/doc 1.jpeg", details: "Heart diagnostics and surgery specialist.", availability: "Mon - Fri, 9 AM to 5 PM", patients: [
+      { name: "Michael Smith", age: 55, condition: "Heart Disease", lastVisit: "2025-08-02" },
+      { name: "Sarah Johnson", age: 42, condition: "Arrhythmia", lastVisit: "2025-07-25" }
+    ]},
+    { name: "Dr. John", specialty: "Neurologist", image: "img/doc 2.jpeg", details: "Brain and nerve disorder specialist.", availability: "Mon - Thu, 10 AM to 4 PM", patients: [
+      { name: "David Lee", age: 60, condition: "Stroke Recovery", lastVisit: "2025-07-29" },
+      { name: "Anna Brown", age: 38, condition: "Migraine", lastVisit: "2025-07-20" }
+    ]},
+    { name: "Dr. Priya", specialty: "Pediatrician", image: "img/doc 3.jpeg", details: "Specialist in children's health.", availability: "Tue - Sat, 9 AM to 3 PM", patients: [
+      { name: "Rohan Mehta", age: 5, condition: "Fever", lastVisit: "2025-08-05" },
+      { name: "Aisha Khan", age: 7, condition: "Asthma", lastVisit: "2025-07-28" }
+    ]},
+    { name: "Dr. Rajesh", specialty: "Orthopedic", image: "img/doc6.jpg", details: "Expert in bone and joint treatments.", availability: "Mon - Fri, 10 AM to 5 PM", patients: [
+      { name: "Karan Patel", age: 45, condition: "Knee Pain", lastVisit: "2025-07-30" },
+      { name: "Rita Sharma", age: 50, condition: "Fracture", lastVisit: "2025-07-22" }
+    ]},
+    { name: "Dr. Meera", specialty: "Dermatologist", image: "img/doc4.jpeg", details: "Skin care and cosmetic treatments.", availability: "Mon - Sat, 11 AM to 4 PM", patients: [
+      { name: "Neha Gupta", age: 29, condition: "Acne", lastVisit: "2025-08-01" },
+      { name: "Arjun Verma", age: 35, condition: "Psoriasis", lastVisit: "2025-07-18" }
+    ]},
+    { name: "Dr. Sameer", specialty: "ENT Specialist", image: "img/doc7.webp", details: "Ear, Nose, and Throat specialist.", availability: "Tue - Sat, 9 AM to 2 PM", patients: [
+      { name: "Vikas Yadav", age: 40, condition: "Sinusitis", lastVisit: "2025-07-26" },
+      { name: "Ravi Kumar", age: 33, condition: "Ear Infection", lastVisit: "2025-07-19" }
+    ]},
+    { name: "Dr. Kavita", specialty: "Gynecologist", image: "img/doc5.jpg", details: "Women’s health and pregnancy care.", availability: "Mon - Fri, 10 AM to 3 PM", patients: [
+      { name: "Pooja Singh", age: 28, condition: "Pregnancy Checkup", lastVisit: "2025-08-03" },
+      { name: "Sneha Rao", age: 31, condition: "PCOS", lastVisit: "2025-07-27" }
+    ]},
+    { name: "Dr. Ahmed", specialty: "General Physician", image: "img/doc8.jpg", details: "General health and check-ups.", availability: "Mon - Sat, 9 AM to 6 PM", patients: [
+      { name: "Rahul Das", age: 36, condition: "Fever", lastVisit: "2025-08-04" },
+      { name: "Sonia Kapoor", age: 40, condition: "Diabetes", lastVisit: "2025-07-21" }
+    ]}
+  ];
+
+  const doctorList = document.getElementById("doctor-list");
+  doctors.forEach((doc, index) => {
+    doctorList.innerHTML += `
+      <div class="col-12 col-s-6 col-lg-3">
+        <div class="card doctor-card shadow">
+          <img src="${doc.image}" class="card-img-top" alt="${doc.name}">
+          <div class="card-body">
+            <h5 class="card-title">${doc.name}</h5>
+            <p class="card-text">${doc.specialty}</p>
+            <button class="btn btn-primary btn-sm" data-bs-toggle="collapse" data-bs-target="#details-${index}">
+              View Details
+            </button>
+          </div>
+        </div>
+        <div class="collapse mt-2" id="details-${index}">
+          <div class="card card-body">
+            <p>${doc.details}</p>
+            <p><strong>Availability:</strong> ${doc.availability}</p>
+            <h6>Patients:</h6>
+            <div class="table-responsive">
+              <table class="table table-bordered table-sm">
+                <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th>Age</th>
+                    <th>Condition</th>
+                    <th>Last Visit</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  ${doc.patients.map(p => `
+                    <tr>
+                      <td>${p.name}</td>
+                      <td>${p.age}</td>
+                      <td>${p.condition}</td>
+                      <td>${p.lastVisit}</td>
+                    </tr>`).join('')}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+  });
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
+
+
+
+
